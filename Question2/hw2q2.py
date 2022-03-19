@@ -3,13 +3,13 @@ import numpy as np
 def hw2q2():
     Ntrain = 100
     data = generateData(Ntrain)
-    plot3(data[0,:],data[1,:],data[2,:])
+    #plot3(data[0,:],data[1,:],data[2,:])
     xTrain = data[0:2,:]
     yTrain = data[2,:]
     
     Ntrain = 1000
     data = generateData(Ntrain)
-    plot3(data[0,:],data[1,:],data[2,:])
+    #plot3(data[0,:],data[1,:],data[2,:])
     xValidate = data[0:2,:]
     yValidate = data[2,:]
     
