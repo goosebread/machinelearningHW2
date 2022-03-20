@@ -1,3 +1,0 @@
-https://courses.cs.washington.edu/courses/cse590b/13au/lecture_notes/solvecubic_p3.pdf
-
-also the stanford least squares derivation

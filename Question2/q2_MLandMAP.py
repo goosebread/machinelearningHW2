@@ -1,10 +1,9 @@
-from socket import ntohl
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize
 from hw2q2 import hw2q2
 
 #generate cubic terms
+#vector of basis functions
 def z_fun(x):
     x02 = np.multiply(x[:,0],x[:,0])
     x0x1 = np.multiply(x[:,1],x[:,0])
@@ -21,9 +20,10 @@ def z_fun(x):
 def c_func(x,w):
     return np.matmul(z_fun(x),w)
 
+#ML parameter estimation applied to cubic model with additive noise
 def run_ML(xTrain,yTrain,xValidate,yValidate):
 
-    #closed form solution for polynomial weights
+    #closed form solution for weights for cubic basis functions
     zTrain = z_fun(xTrain)
     w = np.matmul(np.linalg.inv(np.matmul(zTrain.T,zTrain)),np.matmul(zTrain.T,yTrain))
 
@@ -52,7 +52,8 @@ def run_ML(xTrain,yTrain,xValidate,yValidate):
 
 def get_MAP_error(xTrain,yTrain,xValidate,yValidate,tau):
 
-    #closed form solution for polynomial weights
+    #closed form solution for weights for cubic basis functions
+    #tau = sigma*sigma/gamma
     zTrain = z_fun(xTrain)
     w = np.matmul(np.linalg.inv(np.matmul(zTrain.T,zTrain)+tau*np.eye(zTrain.shape[1])),np.matmul(zTrain.T,yTrain))
     #evaluate using validate set
@@ -63,6 +64,11 @@ def get_MAP_error(xTrain,yTrain,xValidate,yValidate,tau):
     totalSquaredError = np.sum(np.multiply(yValidate-Predictions,yValidate-Predictions))
     return totalSquaredError/N
 
+#MAP parameter estimation applied to cubic model with additive noise
+#Priors of the weights vector is assumed to be a zero-mean gaussian with hyperparameter for covariance
+#The hyperparameter tau is defined as sigma*sigma/gamma
+#where sigma = known standard deviation of additive noise model
+#and gamma = hyperparameter for the variance of the distribution of priors defined in the problem description
 def run_MAP(xTrain,yTrain,xValidate,yValidate):
 
     #test across many tau values (1e-4 to 1e4)
@@ -126,7 +132,6 @@ def run_q2():
     ax.set_title('Average Squared Error on Validation Set vs Tau')
     ax.legend(handles=[l1,l2])
     plt.show()
-
 
 run_q2()
 
