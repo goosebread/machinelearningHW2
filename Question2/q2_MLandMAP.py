@@ -53,7 +53,7 @@ def run_ML(xTrain,yTrain,xValidate,yValidate):
 def get_MAP_error(xTrain,yTrain,xValidate,yValidate,tau):
 
     #closed form solution for weights for cubic basis functions
-    #tau = sigma*sigma/gamma
+    #tau = sigma*sigma/(N*gamma)
     zTrain = z_fun(xTrain)
     w = np.matmul(np.linalg.inv(np.matmul(zTrain.T,zTrain)+tau*np.eye(zTrain.shape[1])),np.matmul(zTrain.T,yTrain))
     #evaluate using validate set
@@ -66,16 +66,16 @@ def get_MAP_error(xTrain,yTrain,xValidate,yValidate,tau):
 
 #MAP parameter estimation applied to cubic model with additive noise
 #Priors of the weights vector is assumed to be a zero-mean gaussian with hyperparameter for covariance
-#The hyperparameter tau is defined as sigma*sigma/gamma
+#The hyperparameter tau is defined as sigma*sigma/(N*gamma)
 #where sigma = known standard deviation of additive noise model
 #and gamma = hyperparameter for the variance of the distribution of priors defined in the problem description
 def run_MAP(xTrain,yTrain,xValidate,yValidate):
 
     #test across many tau values (1e-4 to 1e4)
     Ntaus = 8000
-    t1 = np.logspace(-4,-1,num=int(Ntaus/4),endpoint=False)
+    t1 = np.logspace(-1,-1,num=int(Ntaus/4),endpoint=False)
     t2 = np.linspace(0.1,10,num=int(Ntaus/2),endpoint=False)
-    t3 = np.logspace(1,8,num=int(Ntaus/4))
+    t3 = np.logspace(1,12,num=int(Ntaus/4))
     taus = np.concatenate((t1,t2,t3))
     tauErrors = np.zeros(Ntaus)
     for i in range(Ntaus):
@@ -127,7 +127,7 @@ def run_q2():
     fig,ax = plt.subplots()
     l1,=ax.semilogx(taus,MAP_Errors,color='b',label="MAP with specified prior")
     l2,=ax.semilogx([taus[0],taus[-1]],[ML_Error,ML_Error],color='g',linestyle='dashed',label="ML Average Squared Error")
-    ax.set_xlabel('tau = sigma*sigma/gamma')
+    ax.set_xlabel('tau = sigma^2/(N*gamma)')
     ax.set_ylabel('Average Squared Error')
     ax.set_title('Average Squared Error on Validation Set vs Tau')
     ax.legend(handles=[l1,l2])
